@@ -2,18 +2,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const RestaurantSchema = new Schema({
-  restaurantId: {
-    type: String,
-    required: true,
-  },
   restaurantName: {
-    type: Number,
+    type: String,
     required: true,
   },
   isOpen: {
     type: Boolean,
   },
-  orderedItems: {
+  menueItems: {
     type: [{ type: Schema.Types.ObjectId, ref: 'menuItem' }],
     required: true,
   },
