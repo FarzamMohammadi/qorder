@@ -2,19 +2,20 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ItemRatingSchema = new Schema({
-  order: {
-    type: Schema.Types.ObjectId,
-    ref: 'order',
-    required: true,
-  },
   restaurant: {
     type: Schema.Types.ObjectId,
     ref: 'restaurant',
     required: true,
   },
-  menueItem: {
+  menuItem: {
     type: Schema.Types.ObjectId,
     ref: 'menuItem',
+    required: true,
+  },
+  rating: {
+    type: Number,
+    min: 0,
+    max: 10,
     required: true,
   },
   date: {

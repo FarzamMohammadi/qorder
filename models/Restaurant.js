@@ -2,17 +2,22 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const RestaurantSchema = new Schema({
-  restaurantName: {
+  name: {
     type: String,
     required: true,
   },
   isOpen: {
     type: Boolean,
   },
-  menueItems: {
-    type: [{ type: Schema.Types.ObjectId, ref: 'menuItem' }],
-    required: true,
-  },
+  menuItems: [
+    {
+      menuItem: {
+        type: Schema.Types.ObjectId,
+        ref: 'menuItem',
+        required: true,
+      },
+    },
+  ],
 });
 
 module.exports = Restaurant = mongoose.model('restaurant', RestaurantSchema);

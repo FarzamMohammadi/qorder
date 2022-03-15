@@ -58,7 +58,7 @@ router.get('/:order_id', async (req, res) => {
 // @access  public
 router.delete('/:order_id', async (req, res) => {
   try {
-    const order = await Order.findOneAndDelete(req.params.order_id);
+    const order = await Order.findOneAndDelete({ _id: req.params.order_id });
     res.status(200).send('Order deleted');
   } catch (error) {
     console.error(error.message);

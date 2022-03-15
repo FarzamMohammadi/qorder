@@ -82,7 +82,9 @@ router.put('/:menuitem_id', async (req, res) => {
 // @access  public
 router.delete('/:menuitem_id', async (req, res) => {
   try {
-    const menuItem = await MenuItem.findOneAndDelete(req.params.menuitem_id);
+    const menuItem = await MenuItem.findOneAndDelete({
+      _id: req.params.menuitem_id,
+    });
     res.status(200).send('Menu item deleted');
   } catch (error) {
     console.error(error.message);
