@@ -12,10 +12,11 @@ const MenuItem = require('../../models/MenuItem');
 router.post('/:restaurant_id', async (req, res) => {
   try {
     const restaurant = await Restaurant.findById(req.params.restaurant_id);
+    const { tip, menuItems } = req.body;
     const newOrder = new Order({
       restaurant,
-      tip: req.body.tip,
-      menuItems: req.body.menuItems,
+      tip,
+      menuItems,
     });
 
     const order = await newOrder.save();
@@ -65,22 +66,18 @@ router.delete('/:order_id', async (req, res) => {
   }
 });
 
-// @route   post api/orders/:restaurant_id
-// @desc    Create new order
+// @route   PUT api/orders/:order_id
+// @desc    Update existing order
 // @access  public
 router.put('/:order_id', async (req, res) => {
   try {
-    // const updatedOrder = new Order({
-    //   tip: req.body.tip,
-    //   menuItems: req.body.menuItems,
-    // });
-
-    const newOrder = await Order.findByIdAndUpdate(
+    const { tip, menuItems } = req.body;
+    const updatedOrder = await Order.findByIdAndUpdate(
       { _id: req.params.order_id },
       {
         $set: {
-          tip: req.body.tip,
-          menuItems: req.body.menuItems,
+          tip,
+          menuItems,
         },
       },
       { new: true }

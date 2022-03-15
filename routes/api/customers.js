@@ -7,7 +7,7 @@ const Customer = require('../../models/Customer');
 const Order = require('../../models/Order');
 
 // @route   POST api/customers
-// @desc    create cusomter
+// @desc    create new cusomter
 // @access  public
 router.post(
   '/',
@@ -27,11 +27,10 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, email, orderId } = req.body;
-
+    const { name, email, phoneNumber, orders } = req.body;
+    console.log(orders);
     try {
       let customer = await Customer.findOne({ email });
-      let order = await Order.findOne({ orderId });
       if (customer) {
         return res
           .status(400)
@@ -41,9 +40,9 @@ router.post(
       customer = new Customer({
         name,
         email,
+        phoneNumber,
+        orders,
       });
-      customer.orders.push(order);
-
       await customer.save();
       res.json(customer);
     } catch (err) {
@@ -52,5 +51,57 @@ router.post(
     }
   }
 );
+
+// @route   PUT api/customers
+// @desc    Update existing customer
+// @access  public
+router.put('/:customer_id', async (req, res) => {
+  try {
+    const updatedCustomer = await Customer.findByIdAndUpdate(
+      { _id: req.params.customer_id },
+      {
+        $set: {
+          name: req.body.name,
+          email: req.body.email,
+          phoneNumber: req.body.phoneNumber,
+          orders: req.body.orders,
+        },
+      },
+      { new: true }
+    );
+    res.status(200).send('Customer updated');
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route   GET api/customers
+// @desc    Get all customers
+// @access  public
+router.get('/', async (req, res) => {
+  try {
+    const customers = await Customer.find();
+
+    res.json(customers);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route   GET api/customers
+// @desc    Get customer by id
+// @access  public
+router.get('/:customer_id', async (req, res) => {
+  try {
+    const customer = await Customer.findById(req.params.customer_id);
+
+    res.json(customer);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server error');
+  }
+});
 
 module.exports = router;
