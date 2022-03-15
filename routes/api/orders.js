@@ -27,7 +27,7 @@ router.post('/:restaurant_id', async (req, res) => {
   }
 });
 
-// @route   GET api/orders/
+// @route   GET api/orders
 // @desc    Get all orders
 // @access  public
 router.get('/', async (req, res) => {
