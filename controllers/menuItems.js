@@ -1,4 +1,5 @@
 const MenuItem = require('../models/MenuItem');
+const Restaurant = require('../models/Restaurant');
 
 // @route   POST api/menu-items
 // @desc    Create menu item
@@ -14,6 +15,12 @@ exports.post = async (req, res) => {
     });
 
     const menuItem = await newMenuItem.save();
+
+    const addToRestaurant = await Restaurant.findOneAndUpdate(
+      { _id: restaurant },
+      { $push: { menuItems: menuItem._id }},
+    )
+
     res.json(menuItem);
   } catch (error) {
     console.error(error.message);

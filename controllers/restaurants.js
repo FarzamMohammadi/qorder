@@ -38,7 +38,7 @@ exports.get = async (req, res) => {
 // @access  public
 exports.getByRestaurantId = async (req, res) => {
   try {
-    const restaurant = await Restaurant.findById(req.params.restaurant_id);
+    const restaurant = await Restaurant.findById(req.params.restaurant_id).populate('menuItems');
     res.json(restaurant);
   } catch (error) {
     console.error(error.message);
