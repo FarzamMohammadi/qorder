@@ -51,19 +51,14 @@ exports.getByRestaurantId = async (req, res) => {
 // @access  public
 exports.putByRestaurantId = async (req, res) => {
   try {
-    const { name, isOpen, menuItems } = req.body;
     const updatedRestaurant = await Restaurant.findByIdAndUpdate(
       { _id: req.params.restaurant_id },
-      {
-        $set: {
-          name,
-          isOpen,
-          menuItems,
-        },
-      },
+      req.body,
       { new: true }
     );
-    res.status(200).send('Restaurant updated');
+
+    console.log(req.body)
+    res.status(200).json(updatedRestaurant);
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server error');
@@ -78,7 +73,7 @@ exports.deleteByRestaurantId = async (req, res) => {
     const restaurant = await Restaurant.findOneAndDelete({
       _id: req.params.restaurant_id,
     });
-    res.status(200).send('Restaurant deleted');
+    res.status(200).json(restaurant);
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server error');

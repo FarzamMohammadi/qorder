@@ -7,14 +7,16 @@ const Order = require('../models/Order');
 exports.post = async (req, res) => {
   try {
     const restaurant = await Restaurant.findById(req.params.restaurant_id);
-    const { tip, menuItems } = req.body;
+    const { tip, totalCost, menuItems } = req.body;
     const newOrder = new Order({
       restaurant,
       tip,
+      totalCost,
       menuItems,
     });
 
     const order = await newOrder.save();
+    await order.populate('menuItems.menuItem');
     res.json(order);
   } catch (error) {
     console.error(error.message);
@@ -49,6 +51,21 @@ exports.getTipsByRestaurantId = async (req, res) => {
       tips += order.tip;
     }
     res.json({ total24hr: tips });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server error');
+  }
+};
+
+// @route   GET api/orders/:restaurantId
+// @desc    get all orders via restaurant id
+// @access  public
+exports.getOrdersByRestaurantId = async (req, res) => {
+  try {
+    const orders = await Order.find({
+      restaurant: req.params.restaurant_id,
+    });
+    res.json(orders);
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server error');
@@ -90,14 +107,12 @@ exports.putByOrderId = async (req, res) => {
     const updatedOrder = await Order.findByIdAndUpdate(
       { _id: req.params.order_id },
       {
-        $set: {
-          tip,
-          menuItems,
-        },
+        tip,
+        menuItems,
       },
       { new: true }
-    );
-    res.status(200).send('Order updated');
+    ).populate('menuItems.menuItem');
+    res.status(200).json(updatedOrder);
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server error');

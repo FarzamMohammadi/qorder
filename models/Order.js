@@ -17,6 +17,10 @@ const OrderSchema = new Schema({
     type: Number,
     required: true,
   },
+  totalCost: {
+    type: Number,
+    required: true, 
+  },
   menuItems: [
     {
       menuItem: {
